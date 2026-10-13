@@ -2,7 +2,7 @@
 
 Why do subscribers of a streaming (OTT) service cancel, and which customers are most at risk of leaving next? This project loads customer, subscription and support data into SQL Server, cleans it, and analyses it in Python to find the drivers of churn.
 
-> **Status: work in progress.** The notebook now covers data import, cleaning, transformation and the first round of churn analysis (see [Progress](#progress)). Charts and recommendations are still to come, so the Solution and Demo sections below are placeholders.
+> **Status: work in progress.** The notebook now covers data import, cleaning, transformation, churn analysis and visualisation (see [Progress](#progress) and [Demo](#demo)). Retention recommendations are still to come, so the Solution section below is a placeholder.
 
 ## Problem
 
@@ -52,7 +52,7 @@ The raw data is deliberately messy, and cleaning it is part of the project:
 
 ## Progress
 
-Steps 1 to 5 are in the notebook. Steps 6 and 7 have not been started.
+Steps 1 to 6 are in the notebook. Step 7 has not been started.
 
 ### Importing data
 
@@ -95,7 +95,7 @@ Headline metrics across the 21 customers:
 | Retention rate | 71.43% |
 | Average revenue per user (ARPU) | $18.85 a month |
 | Monthly revenue lost to churned customers | $73.94 of $395.79 (about 19%) |
-| Average customer tenure | About 1,556 days (roughly 4 years) at the last run |
+| Average customer tenure | About 1,557 days (roughly 4 years) at the last run |
 | Escalation rate | 19.05% of customers (4 of 21) |
 | Average complaints per user | 0.43 |
 | Correlation between escalation and churn | 0.77 |
@@ -160,15 +160,66 @@ How far the notebook answers the questions in [Problem](#problem):
 | Which segments churn most? | Answered | Referral channel, Monthly contracts and the Basic plan, with Kentucky and Maine the worst states |
 | What reasons do customers give for cancelling? | Answered | Five reasons across six cancellations, led by switching to a competitor |
 | Do support complaints, escalations and low satisfaction scores come before a cancellation? | Answered | Yes. All 6 churned customers complained 1 to 39 days before cancelling, their average CSAT is 29.17, and escalation is strongly linked to churn (correlation 0.77) |
-| Which customers are most at risk of leaving next? | Partly answered | A Low, Medium or High risk band exists for every customer, but the active customers have not yet been ranked by it |
+| Which customers are most at risk of leaving next? | Answered | Of the 15 active customers, only `0020-JDNXP` (churn score 62) is in the Medium risk band and none are High. The next highest score is 47 |
+
+### Visualisation
+
+Section 5 of the notebook turns the analysis into seven charts, one for each question above, using matplotlib and seaborn. They are shown in [Demo](#demo).
+
+- **One colour per meaning:** orange marks churn, blue marks retained customers and grey marks context, in every chart.
+- **Values on the marks:** each bar carries its figure, and the segment charts show how many customers are behind each rate.
+- **Insight with each chart:** every chart cell ends with a short written reading of the result.
+- **Saved for reuse:** each chart is exported to the [images/](images/) folder when the notebook runs.
+
+The notebook also keeps a correlation heatmap as an exploratory extra.
 
 ## Solution
 
-*To be added once the analysis is complete: final findings and retention recommendations. Results so far are under [Data analysis](#data-analysis).*
+*Retention recommendations are still to be added. The findings they will be based on are under [Data analysis](#data-analysis) and [Demo](#demo).*
 
 ## Demo
 
-*Charts will be saved to an `images/` folder and shown here.*
+The charts below are produced by section 5 of the notebook. With 21 customers in the data, the rates are indicative only.
+
+### How many customers churn, and how much revenue goes with them?
+
+![Stacked bars showing 6 of 21 customers churned (28.6%) and $73.94 of monthly revenue lost (18.7%)](images/churn_overview.png)
+
+Six of 21 customers churned (28.6%), taking $73.94 of $395.79 in monthly revenue (18.7%). The revenue share lost is smaller than the customer share lost, so the customers who left were paying less than average.
+
+### Which segments churn most?
+
+![Churn rate by plan, contract type and acquisition channel](images/churn_by_segment.png)
+
+Acquisition channel shows the widest gap: Referral 83%, Paid 17% and Organic 0%. Monthly contracts churn at 56% against 8% for Annual, and churn falls as the plan tier rises from Basic (60%) to Premium (14%). The same five customers are both Referral and Monthly, so those two effects overlap.
+
+![Churn rate by state](images/churn_by_state.png)
+
+Kentucky and Maine lost every customer (2 of 2 each), which is 4 of the 6 cancellations. Five of the nine states have no churn.
+
+### What reasons do customers give for cancelling?
+
+![Number of churned customers for each cancellation reason](images/cancellation_reasons.png)
+
+Switching to a competitor is the only reason given twice. The other four reasons appear once each, covering price, trial, content and streaming quality.
+
+### Do support complaints come before a cancellation?
+
+![Churn rate by complaint status, and days from complaint to cancellation for each churned customer](images/complaints_churn.png)
+
+Six of the 7 customers who complained went on to cancel (86%), and none of the 14 who never complained did. The complaint came 1 to 39 days before the cancellation, 20.3 days on average, which is the window for a retention offer.
+
+### Which customers are most at risk of leaving next?
+
+![Churn score of each active customer, with the Medium and High risk thresholds marked](images/churn_risk_active_customer.png)
+
+`0020-JDNXP` (score 62) is the only active customer above the Medium threshold and is the first candidate for a retention offer. No active customer is in the High band.
+
+### When did customers cancel?
+
+![Number of cancellations in each month from February to November 2024](images/monthly_cancellation.png)
+
+Four of the six cancellations fall between September and November 2024. Six events are too few to call this a seasonal pattern.
 
 ## How to run
 
@@ -207,6 +258,14 @@ Customer_Churn_Analysis/
 │   ├── customer_churn_data_raw.xlsx
 │   ├── OTT_customer_churn_data.csv
 │   └── OTT_customer_churn_db.sql
+├── images/
+│   ├── cancellation_reasons.png
+│   ├── churn_by_segment.png
+│   ├── churn_by_state.png
+│   ├── churn_overview.png
+│   ├── churn_risk_active_customer.png
+│   ├── complaints_churn.png
+│   └── monthly_cancellation.png
 ├── Notebook/
 │   └── OTT_Customer_Churn_Analysis.ipynb
 ├── LICENSE
