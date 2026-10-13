@@ -2,7 +2,9 @@
 
 Why do subscribers of a streaming (OTT) service cancel, and which customers are most at risk of leaving next? This project loads customer, subscription and support data into SQL Server, cleans it, and analyses it in Python to find the drivers of churn.
 
-> **Status: work in progress.** The notebook now covers data import, cleaning, transformation, churn analysis and visualisation (see [Progress](#progress) and [Demo](#demo)). Retention recommendations are still to come, so the Solution section below is a placeholder.
+> **Status: complete.** The notebook covers data import, cleaning, transformation, churn analysis and visualisation (see [Progress](#progress) and [Demo](#demo)), and the retention recommendations are under [Recommendations](#recommendations).
+>
+> **About the data:** the source is a synthetic dataset of 21 customers, created for practice. The project demonstrates an end-to-end analysis workflow; the figures and recommendations illustrate the method and are not evidence about a real business.
 
 ## Problem
 
@@ -15,9 +17,11 @@ An OTT platform loses a share of its subscribers every year. Each cancellation c
 
 ## Data
 
+The source data is synthetic: 21 customer records with their 21 subscriptions and 9 support records. It contains no real customer information.
+
 | File | Contents |
 | --- | --- |
-| [Data/customer_churn_data_raw.xlsx](Data/customer_churn_data_raw.xlsx) | Raw source workbook |
+| [Data/customer_churn_data_raw.xlsx](Data/customer_churn_data_raw.xlsx) | Raw source workbook (synthetic data) |
 | [Data/OTT_customer_churn_db.sql](Data/OTT_customer_churn_db.sql) | SQL Server script that creates and populates `OTTCustomerChurnDB` |
 | [Data/OTT_customer_churn_data.csv](Data/OTT_customer_churn_data.csv) | Cleaned and merged dataset exported by the notebook, one row per customer |
 
@@ -52,7 +56,7 @@ The raw data is deliberately messy, and cleaning it is part of the project:
 
 ## Progress
 
-Steps 1 to 6 are in the notebook. Step 7 has not been started.
+All seven steps are complete. Steps 1 to 6 are in the notebook, and step 7 is written up under [Recommendations](#recommendations).
 
 ### Importing data
 
@@ -148,7 +152,7 @@ Findings so far:
 
 Limits to keep in mind:
 
-- With 21 customers, most segments hold 2 to 9 people, so the rates are indicative only.
+- The data is synthetic and holds 21 customers. Most segments contain 2 to 9 people, so the rates are indicative only.
 - Average tenure uses the run date for active customers, so it changes each time the notebook is run.
 - Customers with two support records are represented by one of them, so CSAT and complaint dates reflect that single record.
 
@@ -171,15 +175,33 @@ Section 5 of the notebook turns the analysis into seven charts, one for each que
 - **Insight with each chart:** every chart cell ends with a short written reading of the result.
 - **Saved for reuse:** each chart is exported to the [images/](images/) folder when the notebook runs.
 
-The notebook also keeps a correlation heatmap as an exploratory extra.
+## Recommendations
 
-## Solution
+Listed in priority order. The first has the strongest evidence and the lowest cost.
 
-*Retention recommendations are still to be added. The findings they will be based on are under [Data analysis](#data-analysis) and [Demo](#demo).*
+In the Reference column, analysis steps are the numbered cells in section 4 of the notebook (summarised under [Data analysis](#data-analysis)), and visuals are the charts in section 5 (shown in [Demo](#demo)).
+
+| # | Action | Evidence from Analysis | Reference | How to measure success |
+| --- | --- | --- | --- | --- |
+| 1 | **Contact every customer within 7 days of a support complaint**, with a fix or a retention offer. Treat escalated complaints as urgent. | All 6 churned customers complained first; 6 of 7 complainers cancelled; none of the 14 without a complaint did. The gap was 20.3 days on average, and 13 days or more for 5 of the 6. | Analysis steps 16, 17 and 18; step 14 for escalations. Visual 5.5 | Churn rate among customers who complain, currently 86% |
+| 2 | **Review the Referral programme.** Reward the referrer after the new customer's first renewal, not at sign-up, and add an onboarding check-in for referred customers. | Referral churn is 83% (5 of 6), against 17% for Paid and 0% for Organic. Referral brings 19% of revenue, and $60.95 of its $74.94 has already left. | Analysis step 4. Visual 5.2 | Referral churn rate; share of referred customers reaching first renewal |
+| 3 | **Offer Monthly customers an incentive to switch to Annual.** Start with the four active Monthly customers. | Monthly churn is 56% against 8% for Annual. Annual contracts carry 72% of revenue. | Analysis step 6. Visual 5.2 | Number of Monthly customers converted; churn rate of converted customers |
+| 4 | **Make a retention call to `0020-JDNXP` now**, and add `0023-UYUPN` to a watch list. | `0020-JDNXP` is the only active customer in the Medium band (score 62). `0023-UYUPN` (47) is just under the threshold and on a Monthly contract. | Analysis step 15. Visual 5.6 | Whether both customers are still active at next renewal |
+| 5 | **Record the cause of every complaint and cancellation in fixed categories**, and re-run this analysis when there are more customers. | Six cancellations gave five different reasons, so no product fix can be prioritised yet. | Analysis step 11. Visual 5.4 | A dominant reason emerging once volume grows |
+
+What is at stake: churn currently costs $73.94 a month, 18.7% of revenue. That is the upper limit on what these actions could recover.
+
+What is not recommended from this data:
+
+- **State-based campaigns.** Kentucky and Maine show 100% churn, but that is 2 customers each.
+- **Price changes.** "Too expensive" was given once.
+- **Choosing between actions 2 and 3 on evidence alone.** The five Referral churners are the same five Monthly churners, so the data cannot say which factor drives the loss. Both are worth trying, and a small test would separate them.
+
+All of this rests on a synthetic dataset of 21 customers. The actions are cheap and reversible, which is why they are reasonable to try on thin evidence; anything expensive should wait for more data.
 
 ## Demo
 
-The charts below are produced by section 5 of the notebook. With 21 customers in the data, the rates are indicative only.
+The charts below are produced by section 5 of the notebook. The data is synthetic and holds 21 customers, so the rates are indicative only.
 
 ### How many customers churn, and how much revenue goes with them?
 
