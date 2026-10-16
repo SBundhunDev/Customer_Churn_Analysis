@@ -1,10 +1,41 @@
 # Customer Churn Analysis for an OTT Platform
 
+## Table of contents
+
+- [Overview](#overview)
+  - [Tech stack](#tech-stack)
+- [Problem](#problem)
+- [Data](#data)
+- [Approach](#approach)
+- [Progress](#progress)
+  - [Importing data](#importing-data)
+  - [Data cleaning](#data-cleaning)
+  - [Transformations](#transformations)
+  - [Data analysis](#data-analysis)
+  - [Visualisation](#visualisation)
+- [Recommendations](#recommendations)
+- [Demo](#demo)
+  - [How many customers churn, and how much revenue goes with them?](#how-many-customers-churn-and-how-much-revenue-goes-with-them)
+  - [Which segments churn most?](#which-segments-churn-most)
+  - [What reasons do customers give for cancelling?](#what-reasons-do-customers-give-for-cancelling)
+  - [Do support complaints come before a cancellation?](#do-support-complaints-come-before-a-cancellation)
+  - [Which customers are most at risk of leaving next?](#which-customers-are-most-at-risk-of-leaving-next)
+  - [When did customers cancel?](#when-did-customers-cancel)
+- [How to run](#how-to-run)
+- [Project structure](#project-structure)
+- [License](#license)
+
+## Overview
+
 Why do subscribers of a streaming (OTT) service cancel, and which customers are most at risk of leaving next? This project loads customer, subscription and support data into SQL Server, cleans it, and analyses it in Python to find the drivers of churn.
 
 > **Status: complete.** The notebook covers data import, cleaning, transformation, churn analysis and visualisation (see [Progress](#progress) and [Demo](#demo)), and the retention recommendations are under [Recommendations](#recommendations).
 >
 > **About the data:** the source is a synthetic dataset of 21 customers, created for practice. The project demonstrates an end-to-end analysis workflow; the figures and recommendations illustrate the method and are not evidence about a real business.
+
+### Tech stack
+
+Python · pandas · NumPy · matplotlib · seaborn · SQLAlchemy · pyodbc · SQL Server · Jupyter
 
 ## Problem
 
@@ -294,10 +325,6 @@ Customer_Churn_Analysis/
 ├── README.md
 └── requirements.txt
 ```
-
-## Tech stack
-
-Python · pandas · NumPy · matplotlib · seaborn · SQLAlchemy · pyodbc · SQL Server · Jupyter
 
 ## License
 
